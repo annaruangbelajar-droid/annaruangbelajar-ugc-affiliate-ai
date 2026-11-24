@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UGC Affiliate AI — Storyboard & Video UGC</title>
+<style>
+:root{--pink:#f7d9e8;--lav:#e8e1ff;--blue:#dff2ff;--ink:#332d42;--muted:#746d82;--white:#fff}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);background:linear-gradient(135deg,#fff7fb,#f5f2ff 52%,#effaff);min-height:100vh}
+header{padding:25px 16px 18px;text-align:center}header .logo{font-size:34px}h1{font-size:clamp(25px,6vw,36px);margin:5px 0}header p{margin:6px auto;color:var(--muted);max-width:580px}
+main{max-width:850px;margin:auto;padding:0 14px 36px}.card{background:#ffffffdf;border:1px solid #fff;border-radius:22px;padding:18px;margin:13px 0;box-shadow:0 10px 30px #51407c0d}
+h2{font-size:18px;margin:0 0 14px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+.choice{position:relative;z-index:1;pointer-events:auto;touch-action:manipulation;border:1.5px solid #e4dff0;border-radius:15px;padding:13px;background:white;cursor:pointer;text-align:left;color:var(--ink);min-height:92px}
+.choice strong{display:block;margin-bottom:5px}.choice span{font-size:12px;color:var(--muted)}.choice.active{border-color:#b39bfa;background:#f7f3ff;box-shadow:0 0 0 2px #b39bfa22}
+label{display:block;font-weight:650;font-size:13px;margin:12px 0 6px}input,select,textarea{width:100%;padding:12px;border:1px solid #ddd7e9;border-radius:12px;background:#fff;font:inherit;color:var(--ink)}input[type=file]{padding:9px;font-size:13px}textarea{min-height:85px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.hint{font-size:12px;color:var(--muted);margin-top:5px}
+button.primary,button.secondary{border:0;border-radius:14px;padding:13px 16px;font-weight:750;cursor:pointer;font-size:15px}
+.primary{background:linear-gradient(100deg,#eabbd8,#c9c0ff);color:#30243f;width:100%;margin-top:15px}.secondary{background:#f0ecfb;color:#43365e}.buttons{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+#output{min-height:250px;background:#fbfaff;white-space:pre-wrap;font-size:13px;line-height:1.55}footer{text-align:center;color:var(--muted);font-size:12px;padding:0 20px 25px}
+.hidden{display:none!important}
+.advanced{margin-top:12px;border:1px solid #e7e0f1;border-radius:13px;padding:12px;background:#fff}
+.advanced summary{font-weight:700;color:#665783;cursor:pointer;padding:3px}
+#quickStyleChoices .choice,#quickFoodChoices .choice{min-height:82px}
+@media(max-width:520px){.row{grid-template-columns:1fr}.card{padding:15px}header{padding-top:20px}}
+</style>
+</head>
+<body>
+<header><div class="logo">✨🎬</div><h1>UGC Affiliate AI</h1><p>Buat ide storyboard 10 panel dan prompt video affiliate dengan langkah yang sederhana.</p></header>
+<main>
+<section class="card">
+<h2>1. Pilih jenis konten</h2>
+<div class="grid" id="contentChoices">
+<button class="choice active" data-content="produk"><strong>🛍️ Produk</strong><span>Review dan promosi produk affiliate</span></button>
+<button class="choice" data-content="makanan"><strong>🍜 Makanan</strong><span>Promosi makanan dan suasana toko</span></button>
+</div>
+</section>
+<section class="card" id="styleCard">
+<h2>2. Pilih gaya video</h2>
+<p class="hint">Pilih cara paling mudah. Pengaturan gaya lainnya bisa dibuka jika diperlukan.</p>
+<div class="grid" id="quickStyleChoices">
+<button class="choice active" data-quick-style="review"><strong>👩 Dengan Model</strong><span>Model Review atau Mirror Selfie</span></button>
+<button class="choice" data-quick-style="faceless"><strong>📦 Tanpa Model</strong><span>Produk saja atau ASMR review</span></button>
+<button class="choice" data-quick-style="handreview"><strong>🖐️ Tangan Saja – Review</strong><span>Review dan demonstrasi tanpa membuka paket</span></button>
+<button class="choice" data-quick-style="handsonly"><strong>📦 Unboxing</strong><span>Unboxing hanya tangan; variasi model ada di pengaturan</span></button>
+</div>
+<details class="advanced"><summary>⚙️ Variasi gaya (opsional)</summary>
+<label for="styleVariant">Pilih variasi jika diperlukan</label>
+<select id="styleVariant">
+  <optgroup label="Dengan Model">
+    <option value="review">Model Review</option>
+    <option value="mirror">Mirror Selfie</option>
+  </optgroup>
+  <optgroup label="Tanpa Model">
+    <option value="faceless">Produk Tanpa Model</option>
+    <option value="asmr">ASMR Review + Tulisan Bunyi</option>
+     <option value="handreview">Tangan Saja – Review Tanpa Unboxing</option>
+  </optgroup>
+  <optgroup label="Unboxing">
+    <option value="unboxing">Unboxing dengan model</option>
+    <option value="handsonly">Unboxing Tanpa Model (hanya tangan)</option>
+  </optgroup>
+</select>
+<p class="hint">Pilih gaya utama atau buka variasi untuk memilih model, ASMR, dan jenis unboxing.</p>
+</details>
+</section>
+<section class="card hidden" id="foodStyleCard">
+<h2>2. Pilih gaya promosi makanan</h2>
+<p class="hint">Gaya sederhana sudah dipilih otomatis. Buka pilihan lainnya jika ingin.</p>
+<div class="grid" id="quickFoodChoices">
+<button class="choice active" data-quick-food="closeup"><strong>🍱 Fokus makanan</strong><span>Menonjolkan tampilan dan tekstur makanan</span></button>
+</div>
+<details class="advanced"><summary>⚙️ Pilihan gaya makanan lainnya</summary>
+<div class="grid" id="foodChoices">
+<button class="choice active" data-food="closeup"><strong>🍱 Close-up makanan</strong><span>Detail tekstur dan tampilan makanan</span></button>
+<button class="choice" data-food="vlogger"><strong>🎤 Food vlogger</strong><span>Model memperkenalkan makanan</span></button>
+<button class="choice" data-food="store"><strong>🏪 Promosi di toko</strong><span>Makanan dan tempat toko terlihat</span></button>
+<button class="choice" data-food="cinematic"><strong>✨ Cinematic</strong><span>Pengambilan gambar estetik</span></button>
+</div>
+</details>
+</section>
+<section class="card">
+<h2>3. Masukkan detail dan referensi makanan/toko</h2>
+<div id="foodUploads" class="hidden">
+<label>Foto makanan</label><input id="foodPhoto" type="file" accept="image/*">
+<label>Foto tempat atau toko makanan</label><input id="storePhoto" type="file" accept="image/*">
+</div>
+<div class="row">
+<div><label>Nama produk / makanan</label><input id="itemName" placeholder="Contoh: lotion rambut / ayam geprek"></div>
+<div><label>Nama toko / merek (opsional)</label><input id="brandName" placeholder="Nama merek atau toko"></div>
+</div>
+<div class="row">
+<div><label for="reviewConcept">🎬 Konsep video review</label>
+<select id="reviewConcept">
+<option value="review">Review produk</option>
+<option value="demonstrasi">Demonstrasi produk</option>
+<option value="detail">Review detail produk</option>
+<option value="tutorial">Tutorial penggunaan</option>
+<option value="kelebihan">Review kelebihan produk</option>
+<option value="softselling">Soft selling santai</option>
+</select></div>
+<div><label for="reviewConceptHint">Pilihan konsep</label>
+<p class="hint" id="reviewConceptHint">AI diarahkan membuat review santai berdasarkan detail produk dan informasi yang diberikan.</p></div>
+</div>
+<label>Keunggulan atau informasi yang ingin disampaikan</label><textarea id="benefits" placeholder="Tuliskan fakta produk, rasa makanan, harga promo jika benar, atau detail penting. Jangan masukkan klaim yang belum terverifikasi."></textarea>
+<div class="row">
+<div><label>Voice-over</label><select id="voice"><option value="Bahasa Indonesia, suara natural dan jelas">Indonesia — natural</option><option value="Tanpa voice-over, hanya suara asli dan ambience">Tanpa voice-over</option><option value="Bahasa Indonesia, gaya ceria seperti kreator UGC">Indonesia — ceria</option></select></div>
+<div><label>Platform</label><select id="platform"><option>TikTok / Shopee Video / Reels</option><option>TikTok Affiliate</option><option>Shopee Video</option><option>Instagram Reels</option></select></div>
+</div>
+<div class="row">
+ <div><label>🎙️ Teks saat bicara</label><select id="captionMode"><option value="subtitle">Subtitle mengikuti ucapan</option><option value="karaoke">Karaoke: sorot kata satu per satu</option><option value="none">Tanpa subtitle</option></select></div>
+ <div><label>🎀 Gaya tulisan gemes</label><select id="popStyle"><option value="Cute Pink">Cute Pink</option><option value="Bubble Text">Bubble Text</option><option value="Pop-up">Pop-up membesar</option><option value="Handwritten">Tulisan tangan</option><option value="Sticker">Stiker gemes</option><option value="none">Tanpa tulisan pop-up</option></select></div>
+ </div>
+ <div class="row">
+ <div><label>🤍 Garis outline mengikuti model/produk</label><select id="outlineMode"><option value="ya">Pakai garis outline</option><option value="tidak" selected>Tanpa garis outline</option></select></div>
+ <div><label>🌸 Doodle dekoratif</label><select id="doodleMode"><option value="ya">Pakai doodle (bunga, hati, bintang)</option><option value="tidak" selected>Tanpa doodle</option></select></div>
+ </div>
+ <div class="advanced" id="aestheticSettings">
+   <strong>🏡 Pengaturan tempat review estetik</strong>
+   <div class="row">
+     <div><label for="reviewPlace">Konsep tempat review</label><select id="reviewPlace">
+       <option value="otomatis sesuai kategori produk">Otomatis sesuai kategori produk</option>
+       <option value="studio minimalis pastel">Studio minimalis pastel</option>
+       <option value="meja rias estetik">Meja rias estetik</option>
+       <option value="ruang kerja modern">Ruang kerja modern</option>
+       <option value="dapur estetik">Dapur estetik</option>
+       <option value="ruang keluarga japandi">Ruang keluarga Japandi</option>
+       <option value="kafe minimalis">Kafe minimalis</option>
+     </select></div>
+     <div><label for="signPosition">Posisi papan nama estetik</label><select id="signPosition">
+       <option value="otomatis memilih posisi paling estetik">Otomatis sesuai komposisi</option>
+       <option value="di dinding belakang meja">Di dinding belakang meja</option>
+       <option value="di atas meja menggunakan standing sign kecil">Di atas meja (standing sign)</option>
+       <option value="tanpa papan nama">Tanpa papan nama</option>
+     </select></div>
+   </div>
+   <label for="signName">Nama pada papan nama (bisa diganti setiap produk)</label>
+   <input id="signName" placeholder="Contoh: JEMYNA / nama toko / nama merek">
+   <p class="hint">Nama yang kamu isi akan digunakan persis seperti penulisannya. Jika dikosongkan, AI tidak boleh membuat nama sendiri.</p>
+   <p class="hint">Background, meja, dan aksesori pendukung diarahkan menyesuaikan kategori produk agar tidak selalu sama.</p>
+ </div>
+ <div class="row">
+ <div><label>Warna tulisan</label><select id="textColor"><option value="pink dan putih">Pink dan putih</option><option value="putih dengan outline pink">Putih outline pink</option><option value="lavender dan putih">Lavender dan putih</option><option value="krem dan cokelat">Krem dan cokelat</option><option value="sesuai warna produk dan tetap kontras">Sesuai warna produk</option></select></div>
+ <div><label>Posisi tulisan</label><select id="textPosition"><option value="area kosong dekat produk, tidak menutupi produk">Dekat produk</option><option value="bagian atas atau sisi frame, tidak menutupi wajah dan produk">Atas atau sisi video</option><option value="bagian bawah dengan jarak aman dari tombol aplikasi">Bawah area aman</option></select></div>
+ </div>
+ <div class="row">
+ <div><label>🗣️ Naskah bicara (opsional)</label><textarea id="speechScript" placeholder="Opsional. Tulis naskah santai yang membahas kebutuhan dan solusi produk."></textarea></div>
+ <div><label>💬 Kata pop-up pilihan sendiri (opsional)</label><textarea id="popWords" placeholder="Contoh: Detail cantik ✨&#10;Praktis banget 💗&#10;Cek produknya!"></textarea></div>
+ </div>
+ <p class="hint">Pengaturan ini menambahkan arahan subtitle dan animasi ke prompt video. Pembuatan video final tetap dilakukan di aplikasi video AI/editor yang mendukungnya.</p>
+
+<section class="card" id="hookCard">
+<h2>4. 🎯 Hook video (otomatis)</h2>
+<p class="hint">Tools akan memilihkan hook pembuka secara otomatis. Kamu tidak perlu menentukan jenis hook.</p>
+<button class="secondary" type="button" id="autoHook">✨ Pilihkan hook otomatis</button>
+<p class="hint" id="hookStatus">Hook otomatis akan dipilih saat prompt dibuat.</p>
+<details class="advanced"><summary>⚙️ Atur hook sendiri (opsional)</summary>
+<p class="hint">Jika ingin mengatur sendiri, pilih jenis hook dan buat 10 pilihan.</p>
+<label>Jenis hook</label>
+<select id="hookType">
+<option value="penasaran">Bikin penasaran</option>
+<option value="pertanyaan">Pertanyaan</option>
+<option value="masalah">Masalah & solusi</option>
+<option value="demonstrasi">Demonstrasi produk</option>
+<option value="detail">Fokus detail produk</option>
+<option value="rekomendasi">Rekomendasi / soft selling</option>
+<option value="unboxing">Unboxing</option>
+<option value="promo">Promo (gunakan hanya jika informasinya benar)</option>
+</select>
+<div class="row">
+<div><label>Masalah/kebutuhan audiens (opsional)</label><input id="audienceProblem" placeholder="Contoh: mencari toner yang praktis dipakai"></div>
+<div><label>Solusi/kegunaan berdasarkan fakta (opsional)</label><input id="productSolution" placeholder="Contoh: toner digunakan setelah membersihkan wajah"></div>
+</div>
+<label>Ajakan penutup (CTA)</label>
+<select id="ctaChoice">
+<option value="Cek detail dan variannya di keranjang.">Cek detail dan varian produk</option>
+<option value="Lihat informasi produknya lebih lanjut.">Lihat informasi produk</option>
+<option value="Kalau cocok, cek produknya di keranjang.">Ajakan santai</option>
+<option value="Simpan dulu supaya tidak lupa.">Simpan dulu</option>
+<option value="Kunjungi toko untuk melihat pilihan lainnya.">Lihat pilihan di toko</option>
+</select>
+<div class="buttons"><button class="secondary" type="button" id="makeHooks">✨ Buat 10 pilihan hook</button></div>
+<div id="hookResults" class="grid" style="margin-top:12px"></div>
+</details>
+</section>
+
+ <button class="primary" id="generate">✨ BUAT PROMPT STORYBOARD + VIDEO UGC</button>
+</section>
+<section class="card">
+<h2>5. Hasil prompt storyboard</h2>
+<p class="hint">Salin prompt ini ke alat pembuat gambar/storyboard bersama foto referensi produk atau makanan.</p>
+<textarea id="storyOutput" placeholder="Prompt storyboard akan muncul di sini..." aria-label="Prompt storyboard"></textarea>
+<div class="buttons"><button class="secondary" id="copyStory">📋 Salin prompt storyboard</button><button class="secondary" id="downloadStory">⬇️ Simpan storyboard TXT</button></div>
+</section>
+<section class="card">
+<h2>6. Hasil prompt video UGC</h2>
+<p class="hint">Setelah storyboard dibuat, unggah storyboard itu ke alat pembuat video dan gunakan prompt video di bawah ini.</p>
+<textarea id="videoOutput" placeholder="Prompt video UGC akan muncul di sini..." aria-label="Prompt video UGC"></textarea>
+<div class="buttons"><button class="secondary" id="copyVideo">📋 Salin prompt video</button><button class="secondary" id="downloadVideo">⬇️ Simpan video TXT</button><button class="secondary" id="downloadAll">⬇️ Simpan keduanya</button><button class="secondary" id="reset">↻ Reset</button></div>
+<p class="hint">Tools ini membuat teks prompt, bukan menghasilkan gambar atau video secara langsung. Gunakan foto produk/makanan dan storyboard sebagai referensi di aplikasi AI gambar/video pilihan Anda.</p>
+</section>
+</main>
+<footer>UGC Affiliate AI • Generator prompt berbahasa Indonesia • Tidak menghasilkan video secara langsung</footer>
+<script>
+let content='produk', style='review', foodStyle='closeup';
+const reviewConcepts={
+ review:'REVIEW PRODUK: ulas tampilan, detail yang terlihat, kegunaan yang didukung informasi, dan kesan secara netral.',
+ demonstrasi:'DEMONSTRASI PRODUK: prioritaskan aksi nyata yang memperlihatkan cara kerja/fungsi produk. Gerakan tangan harus sesuai fungsi dan tidak boleh mengarang fitur.',
+ detail:'REVIEW DETAIL PRODUK: fokus bergantian pada bahan/tekstur, warna, bentuk, jahitan/finishing, kompartemen, tombol, atau detail lain yang benar-benar terlihat.',
+ tutorial:'TUTORIAL PENGGUNAAN: susun langkah penggunaan secara singkat dan runtut sesuai petunjuk atau fungsi yang diketahui. Jangan menebak cara pakai.',
+ kelebihan:'REVIEW KELEBIHAN PRODUK: tonjolkan keunggulan hanya dari informasi pengguna atau hal yang benar-benar tampak. Hindari klaim yang tidak terbukti.',
+ softselling:'SOFT SELLING SANTAI: gaya berbagi rekomendasi yang ringan dan tidak memaksa, jelaskan detail/kegunaan secara natural lalu tutup dengan ajakan melihat produk.'
+};
+const conceptHints={
+ review:'AI diarahkan membuat review santai berdasarkan detail produk dan informasi yang diberikan.',
+ demonstrasi:'Fokus pada gerakan tangan yang memperagakan fungsi produk, tanpa unboxing.',
+ detail:'Fokus pada close-up bahan, tekstur, warna, bentuk, dan bagian produk.',
+ tutorial:'Fokus pada langkah penggunaan yang runtut dan sesuai fungsi produk.',
+ kelebihan:'Fokus pada keunggulan yang benar-benar terlihat atau diberikan informasinya.',
+ softselling:'Review terasa seperti berbagi rekomendasi, bukan iklan yang memaksa.'
+};
+
+function setupChoices(id,attr,cb){
+  const container=document.getElementById(id);
+  if(!container) return;
+  container.addEventListener('click',event=>{
+    const button=event.target.closest('.choice');
+    if(!button || !container.contains(button)) return;
+    event.preventDefault();
+    container.querySelectorAll('.choice').forEach(item=>item.classList.remove('active'));
+    button.classList.add('active');
+    cb(button.dataset[attr]);
+  });
+}
+setupChoices('contentChoices','content',v=>{
+  content=v;
+  if(v==='makanan'){ style='review'; document.getElementById('styleVariant').value='review';
+  document.getElementById('reviewConcept').value='review';
+  document.getElementById('reviewConceptHint').textContent=conceptHints.review; document.querySelectorAll('#quickStyleChoices .choice').forEach(x=>x.classList.toggle('active',x.dataset.quickStyle==='review')); }
+  document.getElementById('foodUploads').classList.toggle('hidden',v!=='makanan');
+  document.getElementById('styleCard').classList.toggle('hidden',v!=='produk');
+  document.getElementById('foodStyleCard').classList.toggle('hidden',v!=='makanan');
+});
+document.getElementById('styleVariant').addEventListener('change',event=>{
+  style=event.target.value;
+  const group = ['review','mirror'].includes(style) ? 'review' : (['faceless','asmr'].includes(style) ? 'faceless' : (style==='handreview' ? 'handreview' : 'handsonly'));
+  document.querySelectorAll('#quickStyleChoices .choice').forEach(x=>x.classList.toggle('active',x.dataset.quickStyle===group));
+});
+document.getElementById('quickStyleChoices').addEventListener('click',event=>{
+  const b=event.target.closest('[data-quick-style]'); if(!b)return;
+  document.querySelectorAll('#quickStyleChoices .choice').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); style=b.dataset.quickStyle;
+  const defaults={review:'review',faceless:'faceless',handreview:'handreview',handsonly:'handsonly'};
+  document.getElementById('styleVariant').value=defaults[style];
+});
+document.getElementById('quickFoodChoices').addEventListener('click',event=>{
+  const b=event.target.closest('[data-quick-food]'); if(!b)return;
+  foodStyle=b.dataset.quickFood;
+});
+
+setupChoices('foodChoices','food',v=>foodStyle=v);
+function val(id){return document.getElementById(id).value.trim();}
+document.getElementById('reviewConcept').addEventListener('change',e=>{document.getElementById('reviewConceptHint').textContent=conceptHints[e.target.value];});
+function downloadText(filename, text){const blob=new Blob([text],{type:'text/plain;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();URL.revokeObjectURL(a.href);}
+
+let selectedHook = '';
+function makeHookList(){
+  const name = val('itemName') || (content==='produk' ? 'produk ini' : 'makanan ini');
+  const benefit = val('benefits');
+  const problem = val('audienceProblem');
+  const solution = val('productSolution');
+  const kind = (style==='handreview' && val('hookType')==='unboxing') ? 'demonstrasi' : val('hookType');
+  const templates = {
+    penasaran: [
+      `Ada detail menarik dari ${name} yang perlu kamu lihat.`,
+      `Sebelum lewat, lihat dulu bagian menarik dari ${name}.`,
+      `Kenapa ${name} ini layak dilihat lebih dekat?`,
+      `Coba perhatikan detail ${name} yang satu ini.`,
+      `Aku mau tunjukkan sesuatu dari ${name}.`,
+      `Jangan nilai ${name} dari tampilannya saja—lihat detailnya.`,
+      `Ini beberapa hal yang bisa kamu cek dari ${name}.`,
+      `Penasaran seperti apa ${name} dari dekat?`,
+      `Yuk, lihat lebih dekat ${name}.`,
+      `Ada yang perlu kamu ketahui sebelum memilih ${name}.`
+    ],
+    pertanyaan: [
+      `Sedang mencari ${name}?`,
+      `Pernah memperhatikan detail seperti ini pada ${name}?`,
+      `Apa yang paling kamu cari dari ${name}?`,
+      `Mau lihat lebih dekat seperti apa ${name}?`,
+      `Kamu lebih suka produk yang seperti ${name}?`,
+      `Sudah tahu detail ${name} ini?`,
+      `Lagi mempertimbangkan ${name}? Cek dulu ini.`,
+      `Butuh referensi sebelum memilih ${name}?`,
+      `Mau tahu cara menggunakan ${name}?`,
+      `Apa detail pertama yang kamu perhatikan dari ${name}?`
+    ],
+    masalah: [
+      `${problem || 'Sedang mencari pilihan yang sesuai kebutuhan'}? Yuk, kenali ${name}.`,
+      `Kalau kamu punya kebutuhan seperti ini, kenali dulu ${name}.`,
+      `Jangan asal pilih—cek apakah ${name} sesuai kebutuhanmu.`,
+      `Sedang mencari solusi untuk kebutuhanmu? Lihat fungsi ${name}.`,
+      `Sebelum membeli, pastikan ${name} sesuai yang kamu butuhkan.`,
+      `Punya kebutuhan tertentu? Cek detail ${name} terlebih dahulu.`,
+      `Bingung memilih? Mulai dengan melihat informasi ${name}.`,
+      `Kenali kebutuhanmu, lalu cek apakah ${name} cocok.`,
+      `Ini cara melihat apakah ${name} sesuai kebutuhanmu.`,
+      `Lihat bagaimana ${name} digunakan dan apa informasi produknya.`
+    ],
+    demonstrasi: [
+      `Begini cara memperlihatkan penggunaan ${name}.`,
+      `Yuk, lihat ${name} saat digunakan.`,
+      `Bukan cuma dilihat—perhatikan cara penggunaan ${name}.`,
+      `Lihat langkah penggunaan ${name} dari dekat.`,
+      `Aku tunjukkan detail penggunaan ${name}.`,
+      `Perhatikan tekstur dan cara memakai ${name}.`,
+      `Ini bagian penggunaan ${name} yang perlu diperhatikan.`,
+      `Lihat bagaimana ${name} bekerja sesuai fungsinya.`,
+      `Kita lihat detail ${name} lebih dekat.`,
+      `Satu demonstrasi singkat untuk mengenal ${name}.`
+    ],
+    detail: [
+      `Coba lihat detail ${name} dari dekat.`,
+      `Perhatikan bentuk dan detail ${name} ini.`,
+      `Ini beberapa detail yang bisa kamu cek dari ${name}.`,
+      `Sebelum memilih, lihat tampilan ${name} lebih dekat.`,
+      `Yuk, kenali kemasan dan detail ${name}.`,
+      `Lihat bagian ${name} yang terlihat di sini.`,
+      `Detail kecil seperti ini bisa kamu perhatikan.`,
+      `Kenali dulu tampilan ${name} sebelum membeli.`,
+      `Fokus ke detail ${name}, bukan cuma kemasannya.`,
+      `Mari lihat ${name} dari beberapa sudut.`
+    ],
+    rekomendasi: [
+      `Kalau sedang mencari ${name}, ini bisa jadi referensi untukmu.`,
+      `Aku tunjukkan ${name} supaya kamu bisa mempertimbangkannya.`,
+      `Sedang membandingkan pilihan? Cek detail ${name} ini.`,
+      `Ini salah satu pilihan yang bisa kamu lihat lebih lanjut.`,
+      `Yuk, kenali ${name} sebelum menentukan pilihan.`,
+      `Bisa jadi referensi kalau kamu sedang mencari ${name}.`,
+      `Lihat dulu informasi ${name} sebelum memutuskan.`,
+      `Aku rangkum detail ${name} yang perlu kamu perhatikan.`,
+      `Pertimbangkan ${name} sesuai kebutuhanmu.`,
+      `Cek apakah detail ${name} cocok dengan yang kamu cari.`
+    ],
+    unboxing: [
+      `Yuk, kita buka paket ${name} ini.`,
+      `Ini isi paket ${name} saat dibuka.`,
+      `Penasaran dengan isi kemasan ${name}?`,
+      `Mari lihat ${name} setelah keluar dari kemasannya.`,
+      `Kita cek isi paket dan detail ${name}.`,
+      `Unboxing singkat ${name}, yuk!`,
+      `Lihat apa saja yang tampak di dalam paket ${name}.`,
+      `Saatnya membuka dan melihat detail ${name}.`,
+      `Begini tampilan ${name} setelah dibuka.`,
+      `Kita kenali isi dan kemasan ${name} lebih dekat.`
+    ],
+    promo: [
+      `Sedang mempertimbangkan ${name}? Cek informasi promo yang tersedia.`,
+      `Sebelum membeli ${name}, cek harga dan promo di toko.`,
+      `Lihat apakah ada penawaran untuk ${name} di halaman produk.`,
+      `Jangan lupa cek detail harga ${name} sebelum checkout.`,
+      `Cek informasi promo ${name} langsung di toko.`,
+      `Mau memilih ${name}? Bandingkan detail dan penawarannya.`,
+      `Lihat informasi terbaru ${name} di halaman produk.`,
+      `Cek varian dan penawaran ${name} sebelum membeli.`,
+      `Pastikan membaca detail ${name} dan ketentuan promonya.`,
+      `Kalau tertarik dengan ${name}, cek penawaran yang tersedia.`
+    ]
+  };
+  const list = templates[kind] || templates.penasaran;
+  return list.map((h,i)=> h);
+}
+document.getElementById('autoHook').addEventListener('click',()=>{
+  const list=makeHookList();
+  selectedHook=list[0];
+  document.getElementById('hookStatus').textContent='Hook otomatis dipilih: '+selectedHook;
+});
+document.getElementById('makeHooks').addEventListener('click',()=>{
+  const results = document.getElementById('hookResults');
+  results.innerHTML = '';
+  selectedHook = '';
+  makeHookList().forEach((hook,i)=>{
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'choice';
+    const strong = document.createElement('strong'); strong.textContent = `Hook ${i+1}`;
+    const span = document.createElement('span'); span.textContent = hook;
+    b.append(strong,span);
+    b.addEventListener('click',()=>{
+      results.querySelectorAll('.choice').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      selectedHook = hook;
+      document.getElementById('hookStatus').textContent = `Hook terpilih: ${hook}`;
+    });
+    results.appendChild(b);
+  });
+  document.getElementById('hookStatus').textContent = 'Pilih salah satu dari 10 hook di atas.';
+});
+
+function getPrompts(){
+const name=val('itemName')|| (content==='produk'?'produk pada foto referensi':'makanan pada foto referensi');
+const brand=val('brandName')||'tidak ditentukan';
+const benefits=val('benefits')||'Gunakan hanya detail yang tampak pada foto atau informasi yang diberikan. Jangan mengarang manfaat, harga, bahan, rasa, atau klaim.';
+const voice=(style==='asmr'||style==='handreview')?'Tanpa voice-over dan tanpa musik; audio ASMR natural yang sinkron dengan aksi produk':val('voice'), platform=val('platform');
+ const captionMode=val('captionMode'), popStyle=val('popStyle');
+ const textColor=val('textColor'), textPosition=val('textPosition');
+ const outlineMode=val('outlineMode'), doodleMode=val('doodleMode');
+ const visualDecor = `GARIS OUTLINE: ${outlineMode==='ya' ? 'Tambahkan garis putih bergaya coretan tangan yang mengikuti siluet model atau kontur produk, tanpa menutupi detail penting.' : 'JANGAN tambahkan garis outline atau garis yang mengelilingi model/produk.'} DOODLE: ${doodleMode==='ya' ? 'Tambahkan doodle dekoratif kecil seperti bunga, hati, bintang, senyuman, dan coretan tangan di area kosong; jangan menutupi produk, wajah, atau tulisan.' : 'JANGAN tambahkan doodle, bunga, hati, bintang, atau coretan dekoratif.'}`;
+ const speechScript=val('speechScript'), popWords=val('popWords');
+ const audienceProblem=val('audienceProblem'), productSolution=val('productSolution'), cta=val('ctaChoice');
+ if(!selectedHook) selectedHook=makeHookList()[0];
+ const hookInstruction=selectedHook;
+ const shortHook = hookInstruction.length > 54 ? hookInstruction.slice(0,51).trimEnd()+'…' : hookInstruction;
+ const benefitOverlay = benefits && !benefits.startsWith('Gunakan hanya detail') ? benefits.split(/[.!?\n]/)[0].trim() : '';
+ const isBag = /tas|tote|handbag|bag|ransel|dompet/i.test(name);
+ const isBeauty = /skincare|serum|toner|lipstik|lip.?cream|bedak|make.?up|cream|krim/i.test(name);
+ const isFashion = /baju|kemeja|celana|dress|sepatu|sandal|jilbab|hijab/i.test(name);
+ const productReviewLines = isBag
+   ? ['Tas ini cantik banget, ya!', 'Aku suka model dan tampilannya.', 'Detail kecilnya bikin makin manis.', 'Bagian depan tasnya terlihat menarik.', 'Yuk, kita lihat lebih dekat bahan tasnya.', 'Sekarang kita intip bagian dalamnya.', 'Perhatikan detail penutup dan resletingnya.', 'Ruang dalamnya bisa dicek sesuai kebutuhan.', 'Model seperti ini cocok dipadukan dengan gaya santai.', 'Kalau suka modelnya, cek pilihan variannya, ya!']
+   : isBeauty
+   ? [`${name} ini menarik untuk dilihat lebih dekat.`, 'Kemasan produknya terlihat menarik.', 'Yuk, perhatikan bagian aplikatornya.', 'Teksturnya terlihat seperti pada referensi.', 'Begini bagian produk saat diaplikasikan.', 'Perhatikan hasil tampilan pada area pemakaian.', 'Cek informasi produk pada kemasannya.', 'Pilih dan gunakan sesuai petunjuk produk.', 'Perhatikan apakah detailnya sesuai kebutuhanmu.', 'Kalau tertarik, cek detail produknya, ya!']
+   : isFashion
+   ? [`Produk ini punya tampilan yang menarik.`, 'Aku suka model dan potongannya.', 'Perhatikan detail bagian depannya.', 'Yuk, lihat lebih dekat tekstur bahannya.', 'Bagian jahitannya bisa kita perhatikan.', 'Lihat detail produk dari sisi lainnya.', 'Perhatikan bentuk dan ukurannya.', 'Detailnya terlihat seperti pada foto referensi.', 'Bisa dipertimbangkan sesuai gaya dan kebutuhan.', 'Kalau suka modelnya, cek pilihan variannya, ya!']
+   : [`${name} ini menarik, yuk kita lihat!`, 'Pertama, perhatikan tampilan keseluruhannya.', 'Aku suka detail yang satu ini.', 'Yuk, lihat bagian ini lebih dekat.', 'Perhatikan bahan atau tekstur yang terlihat.', 'Sekarang kita lihat bagian lainnya.', 'Coba perhatikan fungsi atau fitur ini.', 'Detailnya bisa dicek dari dekat.', 'Sesuaikan pilihan dengan kebutuhanmu.', 'Kalau tertarik, cek detail produknya, ya!'];
+ const overlayLines = content==='produk' ? productReviewLines : [shortHook,name,'Tampilannya menarik, ya!','Perhatikan detailnya.','Yuk, lihat prosesnya.','Lihat teksturnya lebih dekat.','Perhatikan hasil penyajiannya.','Detail ini menarik untuk diperhatikan.','Cocok dinikmati sesuai selera.','Cek pilihan menu lainnya, ya!'];
+ const selectedConcept = val('reviewConcept') || 'review';
+ const conceptReviewRules = {
+  review: 'REVIEW PRODUK: kalimat berisi pendapat/kesan natural, misalnya “Wah, modelnya cantik banget!” atau “Aku suka detail ini.”',
+  demonstrasi: 'DEMONSTRASI PRODUK: kalimat menjelaskan apa yang sedang diperagakan dan reaksi/kesan terhadap fungsi yang terlihat, misalnya “Nah, begini cara membuka bagian ini” atau “Ternyata bagian ini mudah dijangkau.” Jangan mengklaim fungsi yang tidak terbukti.',
+  detail: 'REVIEW DETAIL: kalimat mengomentari bagian spesifik yang sedang ditunjuk, disentuh, atau diperlihatkan, misalnya “Jahitannya terlihat rapi” hanya jika memang tampak.',
+  tutorial: 'TUTORIAL PENGGUNAAN: kalimat memandu langkah yang sedang dilakukan, misalnya “Pertama, buka bagian penutupnya.” Urutan tulisan harus sama dengan urutan gerakan.',
+  kelebihan: 'REVIEW KELEBIHAN: kalimat menonjolkan kelebihan yang benar-benar terlihat atau dinyatakan pengguna, misalnya “Modelnya simpel dan mudah dipadukan” bila sesuai.',
+  softselling: 'SOFT SELLING: kalimat seperti rekomendasi santai, misalnya “Kalau suka model simpel seperti ini, boleh dipertimbangkan.” Jangan memaksa atau membuat klaim berlebihan.'
+ };
+ const overlayInstruction = `TULISAN DI SETIAP PANEL STORYBOARD HARUS BERUPA KALIMAT YANG SESUAI DENGAN KONSEP TERPILIH. KONSEP TERPILIH: ${selectedConcept.toUpperCase()}. ATURAN KHUSUS KONSEP: ${conceptReviewRules[selectedConcept] || conceptReviewRules.review} Buat 10 kalimat berbeda, natural, seperti kreator sedang berbicara kepada calon pembeli. Setiap kalimat wajib sinkron dengan gerakan tangan dan bagian produk yang terlihat pada panel yang sama: jika tangan menyentuh pita, kalimat membahas pita; jika membuka tas, kalimat membahas proses membuka atau bagian dalam; jika menunjukkan resleting, kalimat membahas resleting. AI harus menentukan urutan gerakan dan kalimat berdasarkan produk pada foto referensi serta konsep yang dipilih. Jangan memakai kalimat petunjuk generik seperti “Perhatikan detail produk” atau “Tampilan produk”. Jangan memaksakan contoh tas pada produk lain. Jangan mengarang bahan, fitur, kapasitas, kualitas, manfaat, hasil, atau pengalaman pribadi yang tidak terlihat/tercantum. Jika detail tidak jelas, gunakan komentar netral. Teks ini adalah kalimat review yang tampil di panel storyboard, bukan instruksi produksi. Satu kalimat singkat per panel, Bahasa Indonesia alami, mudah dibaca, tidak menutupi produk atau tangan.`;
+ const problemSolutionInstruction=`MASALAH/KEBUTUHAN AUDIENS: ${audienceProblem || 'Tentukan kebutuhan yang relevan hanya jika didukung informasi yang diberikan; jika tidak, jangan mengarang masalah.'}\nSOLUSI/KEGUNAAN: ${productSolution || 'Jelaskan kegunaan berdasarkan fakta/informasi produk yang diberikan dan cara penggunaan yang benar; jangan membuat klaim baru.'}\nCTA: ${cta}`;
+let mode='', setting='', action='';
+ const reviewPlace=val('reviewPlace')||'otomatis sesuai kategori produk';
+ const signPosition=val('signPosition')||'otomatis memilih posisi paling estetik';
+ const signName=val('signName'); 
+ const aestheticDirection=`TEMPAT REVIEW ESTETIK: Gunakan ${reviewPlace}. Jika otomatis, tentukan tempat berdasarkan kategori dan fungsi produk: skincare/kosmetik di meja rias atau vanity estetik; tas/fashion di studio lifestyle atau meja display; alat dapur di dapur estetik; elektronik/gadget di meja kerja modern; perlengkapan rumah di interior rumah yang serasi. BACKGROUND DAN PROPERTI: Buat latar, warna, material meja, alas, dan aksesori pendukung bervariasi serta relevan dengan produk yang sedang direview. Jangan memakai set, dekorasi, atau aksesori generik yang sama untuk semua produk. Pilih hanya properti pendukung yang masuk akal, rapi, tidak berlebihan, dan tidak menutupi produk. Papan nama: ${signPosition}${signName ? `, bertuliskan persis “${signName}”` : ', tanpa menambahkan nama atau merek baru'}. Papan nama harus estetik, terbaca, dan menjadi elemen latar, bukan mengganti logo pada produk.`;
+
+const demoGuide = (content==='produk' && (style==='review' || style==='mirror' || style==='unboxing' || style==='handsonly' || style==='handreview'))
+ ? `DEMONSTRASI PENGGUNAAN PRODUK WAJIB: Kenali kategori dan fungsi produk dari foto serta informasi pengguna. Tampilkan produk benar-benar digunakan, bukan hanya dipegang atau diperlihatkan. Sesuaikan demonstrasi: toner/skincare—tuangkan sedikit toner ke kapas atau tangan dan tunjukkan cara aplikasi yang wajar; lipstik—keluarkan aplikator dan tunjukkan swatch/pemakaian; sabun/deterjen—tuangkan dan tunjukkan penggunaan pada benda yang sesuai; alat dapur/elektronik—tunjukkan alat sedang menjalankan fungsi; tas—buka ritsleting dan tunjukkan ruang penyimpanan; pakaian/sepatu—tunjukkan bahan, detail, dan cara dikenakan. Sesuaikan dengan produk sebenarnya. Jangan mengarang fungsi, hasil, klaim, atau cara pakai yang tidak didukung referensi.`
+ : '';
+if(content==='produk'){
+const modes={
+review:'MODEL TERLIHAT DAN MEREVIEW SECARA SANTAI: Model tampil di kamera dan menjelaskan produk seperti sedang berbagi rekomendasi kepada teman. Mulai langsung dari hal menarik, kebutuhan yang bisa dibantu produk, detail yang terlihat, atau cara penggunaan yang masuk akal. Hindari pembukaan kaku dan kalimat template.',
+unboxing:'UNBOXING DAN REVIEW: Mulai dari paket/kemasan, model membuka kemasan secara wajar, mengeluarkan produk, memperlihatkan detailnya, lalu memberi review singkat berdasarkan informasi yang tersedia.',
+mirror:'MIRROR SELFIE FACELESS: Satu model yang sama berdiri menghadap cermin dan memegang sendiri satu iPhone 18 Pro Max secara nyata dengan satu tangan atau dua tangan sesuai pose yang wajar; ponsel berada di depan wajah dan menutupi wajah sepenuhnya pada semua panel. Bukan tripod, bukan phone holder, bukan ponsel yang melayang. Model tidak pernah membelakangi cermin dan tidak pernah berputar 180° atau 360°. Kamera melihat pantulan model di cermin; wajah tidak boleh terlihat langsung maupun melalui pantulan. Pertahankan outfit yang sama persis (warna, potongan, bahan, motif, aksesori, dan cara pemakaian), bentuk tubuh, tangan, posisi ponsel, casing, cermin, kamar, furnitur, dekorasi, pencahayaan, dan arah kamera pada seluruh panel. Jika produk berupa tas atau aksesori, pertahankan bentuk, ukuran, warna, posisi tali, gantungan, dan seluruh detailnya; tas tidak boleh melayang, berpindah sendiri, berubah bentuk, muncul, atau hilang. Gerakan hanya gerakan kecil yang secara eksplisit diminta panel; tanpa improvisasi, teleportasi, objek melayang, tangan tambahan, atau perubahan mendadak.',
+faceless:'PRODUK TANPA MODEL (FACELESS): Jangan tampilkan manusia, model, wajah, tubuh, atau tangan. Fokus hanya pada produk dan kemasannya. Gunakan close-up, hero shot, putaran kamera perlahan, dan penataan produk yang rapi. Pertahankan produk sesuai foto referensi.',
+handreview:'TANGAN SAJA – REVIEW TANPA UNBOXING: Jangan tampilkan wajah, kepala, atau tubuh. Hanya tangan yang terlihat. Produk sudah berada di luar kemasan sejak awal; jangan tampilkan paket, membuka kotak, merobek segel, atau proses unboxing. Tangan langsung memegang, memutar, menyentuh, mencoba, dan mendemonstrasikan produk sesuai fungsi sebenarnya sambil menunjukkan detailnya.',
+ handsonly:'UNBOXING TANPA MODEL: Jangan tampilkan wajah, kepala, atau tubuh. Hanya tangan yang boleh terlihat saat membuka kemasan, mengeluarkan produk, dan menunjukkan detailnya. Fokus pada produk, kemasan, dan gerakan tangan yang natural. Pertahankan produk sesuai foto referensi.', 
+asmr:'ASMR REVIEW TANPA MODEL DAN TANPA TANGAN: Hanya produk dan kemasannya yang terlihat. Tidak boleh ada manusia, wajah, tubuh, tangan, jari, atau bayangan manusia. Gunakan gerakan kamera dan animasi produk yang realistis; jangan membuat tangan tak terlihat melakukan aksi. Sertakan suara ASMR natural yang sesuai dengan gerakan visual dan teks review produk otomatis. Tanpa voice-over dan tanpa musik.'
+};
+mode=modes[style];
+setting='Jika pengguna menyertakan foto produk langsung pada aplikasi AI pembuat gambar/video, gunakan sebagai referensi utama. Pertahankan bentuk, ukuran relatif, warna, material, logo, tulisan, kemasan, dan detail produk seakurat mungkin. Jangan membuat produk baru atau mengganti merek. '+aestheticDirection;
+action=style==='handreview'?'REVIEW TANGAN SAJA TANPA UNBOXING: Produk sudah siap di atas meja sejak frame pertama. Tidak ada paket, kardus, plastik pembungkus, pembukaan segel, atau adegan unboxing. Hanya tangan yang terlihat melakukan review langsung: menyentuh tekstur, memegang, memutar, membuka bagian produk yang memang dirancang untuk dibuka, mencoba atau mendemonstrasikan fungsi sesuai kategori, lalu menampilkan detail penting. Tampilkan tulisan review Bahasa Indonesia yang mengikuti gerakan secara sinkron; contoh: saat tangan menyentuh bahan, munculkan “Detail bahan”; saat menunjukkan kompartemen, munculkan “Ruang penyimpanan”; saat mencoba fungsi, munculkan keterangan fungsi berdasarkan informasi yang diberikan. Audio ASMR harus cocok dengan gerakan nyata seperti gesekan bahan, bunyi tombol, ritsleting, atau sentuhan; jangan menambahkan bunyi yang tidak terjadi. Tanpa voice-over dan tanpa musik. '+aestheticDirection:style==='asmr'?'ASMR REVIEW TANPA MODEL DAN TANPA TANGAN: jangan tampilkan manusia, wajah, tubuh, tangan, jari, atau bayangan manusia. Jangan gunakan tangan untuk membuka/memegang produk. Jika perlu gerakan, gunakan animasi produk atau gerakan kamera yang masuk akal. Tanpa dialog, narasi, voice-over, atau musik. Tambahkan tulisan REVIEW PRODUK yang jelas dan mudah dibaca, bukan hanya teks bunyi dekoratif. Buat tulisan singkat yang mengikuti nama produk dan informasi yang diberikan pengguna (misalnya detail kemasan, pilihan warna, cara penggunaan, atau fitur yang benar-benar disebutkan/terlihat). Sebarkan tulisan review pada beberapa adegan dan sinkronkan dengan objek yang sedang ditampilkan. Jangan mengarang manfaat, daya tahan, bahan, harga, hasil, atau klaim. Selain tulisan review, tampilkan teks bunyi pendek bergaya '+popStyle+', warna '+textColor+', posisi '+textPosition+' hanya saat bunyi yang sesuai benar-benar terjadi. Audio hanya ASMR produk yang natural, sinkron dengan gerakan, tanpa musik dan tanpa suara manusia.':'Tampilkan penggunaan/penampilan produk yang masuk akal dan sesuai referensi. Jangan menambahkan fungsi, hasil, atau klaim yang tidak diberikan pengguna. '
+}else{
+const modes={
+closeup:'CLOSE-UP MAKANAN: Tonjolkan tampilan, tekstur, potongan, topping, dan detail makanan yang benar-benar terlihat. Gunakan gerakan kamera lembut dan pencahayaan menggugah selera.',
+vlogger:'FOOD VLOGGER: Kreator memperkenalkan makanan dengan natural, menunjukkan makanan ke kamera, dan berbicara berdasarkan informasi yang diberikan.',
+store:'PROMOSI MAKANAN DI TOKO: Gunakan foto tempat/toko sebagai referensi latar. Perlihatkan makanan dan suasana toko secara alami. Pertahankan papan nama, identitas toko, dan tampilan makanan sesuai referensi.',
+cinematic:'CINEMATIC FOOD: Buat close-up estetik, gerakan kamera perlahan, pencahayaan lembut, dan komposisi premium; makanan tetap sesuai foto asli.'
+};
+mode=modes[foodStyle];
+setting='Gunakan foto makanan dan, jika tersedia, foto tempat/toko yang diunggah sebagai referensi utama. Pertahankan bentuk, warna, porsi, topping, wadah, kemasan, papan nama, serta identitas tempat sesuai foto. Jangan mengganti makanan atau menciptakan detail yang tidak ada.';
+action='Tonjolkan daya tarik visual makanan dan/atau suasana tempat. Jangan mengarang harga, bahan, rasa, sertifikasi, atau klaim yang tidak diberikan pengguna.';
+}
+const storyboard=`PROMPT STORYBOARD UGC AFFILIATE — 10 PANEL\n\nBuat satu lembar storyboard visual berisi TEPAT 10 panel dalam susunan 2 baris × 5 kolom. Setiap panel diberi nomor 1–10 berurutan. Gaya visual realistis seperti konten UGC/TikTok Affiliate, natural, bersih, profesional tetapi tidak kaku, pencahayaan lembut, komposisi rapi. Video akhir vertikal 9:16.\n\nJENIS KONTEN: ${content==='produk'?'Promosi produk':'Promosi makanan'}\nNAMA: ${name}\nMEREK / TOKO: ${brand}\nGAYA YANG DIPILIH: ${mode}\nKONSEP VIDEO: ${reviewConcepts[val('reviewConcept')||'review']}\nINFORMASI YANG BOLEH DISAMPAIKAN: ${benefits}\n${problemSolutionInstruction}\nDEKORASI VISUAL: ${visualDecor}\n${content==='produk'?aestheticDirection:''}\n\nREFERENSI DAN KONSISTENSI — PRIORITAS MUTLAK:
+${setting}
+KUNCI IDENTITAS PRODUK — SANGAT PENTING:
+Jika foto referensi produk disertakan langsung pada aplikasi AI pembuat gambar/video, gunakan sebagai acuan visual utama dan jangan mendesain ulang produk. Jika tidak ada foto referensi, ikuti nama dan detail produk yang diisi pengguna tanpa mengarang detail visual. Setiap panel wajib menampilkan produk yang sama persis dengan foto referensi, bukan produk sejenis atau versi interpretasi AI. Pertahankan bentuk/siluet, proporsi, warna, tekstur, pola, jahitan, posisi tali/pegangan, jumlah kompartemen yang terlihat, aksesori yang menempel, gantungan/charm, pengait, hardware logam, label, tulisan, dan logo persis seperti sumber. Aksesori yang menempel pada produk adalah bagian identitas produk: jangan mengganti bentuk, wajah, warna, ukuran, atau jumlahnya. Jangan menyederhanakan gantungan menjadi pom-pom, boneka lain, atau aksesori generik. Jangan menghilangkan atau mengganti logo/tulisan. Jangan membuat detail baru.
+JANGAN MENAMBAH FITUR YANG TIDAK TERLIHAT: jika foto referensi tidak memperlihatkan bagian dalam, resleting, saku, kapasitas, atau fitur tertentu, jangan membuat adegan yang mengarang bagian tersebut. Pilih sudut lain yang tetap memperlihatkan bagian produk yang memang terlihat pada foto. Jika perlu close-up, close-up hanya pada detail yang benar-benar terlihat pada foto referensi. Bila ragu, pertahankan tampilan utuh produk daripada menciptakan detail.
+ Produk yang sama harus muncul dari panel 1 sampai panel 10: bentuk/siluet, warna, motif, bahan/tekstur yang terlihat, ukuran relatif, jumlah bagian, aksesori, jahitan, letak resleting/kancing, label, tulisan, logo, dan seluruh ciri khas harus tetap sama persis. DILARANG mengganti produk dengan produk mirip, membuat versi baru, mengubah desain/warna, menambah atau menghilangkan bagian, mengganti logo/tulisan, atau membuat detail yang tidak ada pada foto. Jangan membuat produk berubah bentuk antar panel.
+KUNCI KONTINUITAS ADEGAN: gunakan satu lokasi review estetik yang sama dari awal sampai akhir; pertahankan meja, alas, dinding, papan nama, dekorasi, arah cahaya, warna pencahayaan, dan properti latar. Aksesori meja boleh mendukung kategori produk tetapi harus tetap konsisten dan tidak boleh menutupi/mengubah produk. Sudut kamera dan framing boleh berubah untuk close-up, tetapi identitas produk, lokasi, dan suasana tidak berubah. Semua 10 panel harus terasa sebagai satu sesi review yang berkesinambungan.
+URUTAN AKSI HARUS LOGIS: posisi produk pada akhir satu panel menjadi posisi awal panel berikutnya. Gerakan tangan berlanjut secara wajar, tidak berpindah tiba-tiba, tidak muncul tangan tambahan, dan tidak ada lompatan posisi produk.
+ATURAN MODEL: Untuk gaya Model Review atau Mirror Selfie, tentukan satu outfit pada panel pertama dan pertahankan persis di semua panel yang menampilkan model. Untuk gaya Produk Tanpa Model dan ASMR Review, jangan tampilkan manusia, wajah, tubuh, atau tangan pada panel mana pun. Untuk gaya Tangan Saja – Review, hanya tangan yang boleh terlihat; produk sudah berada di luar kemasan sejak awal dan tidak boleh ada adegan unboxing. Untuk gaya Unboxing Tanpa Model, hanya tangan yang boleh terlihat saat membuka kemasan; wajah dan tubuh tidak boleh muncul. Jangan menambah logo baru atau detail produk yang tidak ada di referensi. Tulisan overlay storyboard wajib mengikuti daftar teks per panel di bawah ini; jangan membuat teks acak atau subtitle tambahan.\n\n${overlayInstruction}\n\nURUTAN 10 PANEL (setiap panel 1 detik dan teksnya sama dengan video akhir):\n1. HOOK TERPILIH: “${overlayLines[0]}”. Visual pembuka harus langsung mendukung tulisan hook dan menampilkan objek utama dengan jelas.\n2. Perkenalkan objek utama dari sudut yang mudah dikenali.\n3. Close-up objek utama dan detail penting.\n4. Tampilkan interaksi sesuai gaya: model untuk gaya model, hanya tangan untuk gaya tangan saja, atau close-up produk tanpa manusia untuk faceless/ASMR.\n5. Tunjukkan detail penting produk dan siapkan demonstrasi yang sesuai.\n6. DEMONSTRASI: perlihatkan produk digunakan sesuai fungsi sebenarnya; untuk gaya tangan saja, tangan melakukan aksi review tanpa membuka paket.
+7. DETAIL LANJUTAN: close-up bagian penting saat tangan menunjukkan detail atau kamera mendekat.
+8. REVIEW: tampilkan poin review singkat berdasarkan fakta yang diberikan.
+9. HERO SHOT: produk di set estetik yang sesuai kategori.
+10. PENUTUP: produk jelas, komposisi rapi, dan ruang aman untuk CTA.\n\n${demoGuide}\nPENTING: Sesuaikan seluruh panel dengan gaya terpilih (${mode}). Gaya Produk Tanpa Model dan ASMR Review tidak boleh menampilkan manusia, wajah, tubuh, atau tangan. Gaya Tangan Saja – Review hanya boleh menampilkan tangan dan wajib memperagakan produk tanpa unboxing. Gaya Unboxing Tanpa Model hanya boleh menampilkan tangan saat membuka kemasan. Jangan memaksakan adegan model bila gaya close-up makanan lebih sesuai. Hasil berupa satu storyboard grid 2×5, bukan 10 gambar terpisah dan bukan grid dengan jumlah panel tambahan. Jangan mengubah produk/makanan atau identitas toko dari foto referensi. Jika AI tidak mampu mempertahankan detail tertentu, utamakan menyalin bentuk asli dari foto dan jangan berimajinasi atau menggantinya. Semua 10 panel wajib menampilkan produk yang sama persis dan satu sesi review yang konsisten.`;
+const video=`PROMPT GENERATE VIDEO UGC AFFILIATE — 10 DETIK, BERDASARKAN STORYBOARD\n\nBuat video yang mengikuti urutan storyboard referensi tepat dari panel 1 sampai panel 10. Durasi total tepat 10 detik; setiap panel menjadi adegan sekitar 1 detik dengan transisi halus. Format vertikal 9:16, cocok untuk ${platform}, visual realistis seperti UGC buatan kreator, kamera natural, pencahayaan lembut, gerakan wajar, kualitas jernih.\n\nJENIS KONTEN: ${content==='produk'?'Promosi produk':'Promosi makanan'}\nNAMA: ${name}\nMEREK / TOKO: ${brand}\nGAYA VIDEO: ${mode}\nKONSEP VIDEO: ${reviewConcepts[val('reviewConcept')||'review']}\nINFORMASI YANG BOLEH DISAMPAIKAN: ${benefits}\n${problemSolutionInstruction}\nDEKORASI VISUAL: ${visualDecor}\n${content==='produk'?aestheticDirection:''}\n\nKUNCI KONSISTENSI — JANGAN ADA PERUBAHAN ANTAR ADEGAN:
+${setting}
+Gunakan foto produk asli yang disertakan langsung pada aplikasi AI pembuat video (jika ada) serta storyboard sebagai acuan wajib. Jangan hanya mengikuti storyboard jika storyboard menyimpang dari foto produk asli; foto referensi asli adalah sumber kebenaran tertinggi untuk identitas produk. Pertahankan produk yang sama persis dari frame pertama hingga frame terakhir: siluet, proporsi, warna, motif, tekstur, bahan yang tampak, aksesori, jahitan, kompartemen, resleting/kancing, label, tulisan, dan logo tidak boleh berubah, berganti, berputar menjadi desain lain, atau berlipat secara tidak wajar. Jangan mengganti produk dengan barang serupa. Jangan menambah/mengurangi bagian atau mengarang fitur. Semua aksesori yang melekat pada produk (misalnya gantungan boneka, charm, tali, label, atau hiasan) harus tetap sama persis; dilarang mengganti bentuk atau menyederhanakannya. Jika bagian produk tidak tampak di foto sumber, jangan menciptakan visual bagian tersebut.
+Pertahankan satu lokasi, meja, background, papan nama, dekorasi, properti, arah cahaya, dan nuansa warna sepanjang video. Perubahan hanya boleh pada gerakan tangan, sudut kamera, dan jarak close-up yang mengikuti storyboard. Sambungkan gerakan antar panel secara halus dan logis; posisi produk pada akhir adegan harus cocok dengan awal adegan berikutnya. KHUSUS MODEL: jika gaya terpilih menampilkan model, outfit harus sama persis di semua adegan. Jika gaya Produk Tanpa Model atau ASMR Review dipilih, jangan tampilkan manusia, wajah, tubuh, atau tangan. Jika gaya Tangan Saja – Review dipilih, hanya tangan yang boleh terlihat dan jangan lakukan unboxing. Jika gaya Unboxing Tanpa Model dipilih, hanya tangan yang boleh terlihat saat membuka kemasan; wajah dan tubuh tidak boleh muncul. Jangan mengubah urutan, produk, makanan, kemasan, logo, atau latar utama. Gerakan harus realistis, tanpa bentuk meleleh, logo berubah, tangan/jari cacat, atau detail bergetar.\n\nTIMELINE:\n0–1 detik: Panel 1 — hook: “${overlayLines[0]}”.\n1–2 detik: Panel 2 — perkenalkan produk/makanan: “${overlayLines[1]}”.\n2–3 detik: Panel 3 — close-up detail: “${overlayLines[2]}”.\n3–4 detik: Panel 4 — tunjukkan detail/keunggulan yang diberikan pengguna: “${overlayLines[3]}”.\n4–5 detik: Panel 5 — review desain/bahan produk: “${overlayLines[4]}”.\n5–6 detik: Panel 6 — review fitur dan demonstrasi yang relevan: “${overlayLines[5]}”.\n6–7 detik: Panel 7 — review detail produk: “${overlayLines[6]}”.\n7–8 detik: Panel 8 — kesimpulan review berdasarkan fakta: “${overlayLines[7]}”.\n8–9 detik: Panel 9 — hero shot produk/makanan: “${overlayLines[8]}”.\n9–10 detik: Panel 10 — penutup dan CTA: “${overlayLines[9]}”.\nWAJIB: tulisan overlay pada video harus sama persis dengan tulisan panel storyboard yang bersesuaian. Tampilkan setiap tulisan selama adegan panelnya berlangsung; jangan memunculkan teks panel lain lebih awal.\n\nAUDIO: ${voice}. ${style==='handreview' ? 'KHUSUS TANGAN SAJA – REVIEW: jangan ada voice-over, dialog, atau musik. Gunakan hanya ASMR natural dari gerakan tangan dan produk, sinkron tepat dengan aksi yang terlihat.' : ''} ${style==='asmr' ? 'KHUSUS ASMR TANPA TANGAN: jangan ada voice-over, dialog, atau musik; gunakan hanya suara ASMR/ambience produk yang benar-benar sesuai visual.' : ''} Jika memakai voice-over/dialog, gunakan Bahasa Indonesia sehari-hari yang santai, hangat, ringan, dan tidak kaku. Bicara seperti kreator sedang berbagi tips kepada teman, bukan membaca iklan. Hindari pembukaan berulang seperti 'Halo semua, aku mau tunjukkan', 'Hai guys', atau 'di video kali ini'. Langsung masuk ke hal yang menarik, kebutuhan/masalah yang relevan, lalu jelaskan solusi atau kegunaan produk berdasarkan fakta yang diberikan. Buat kalimat singkat dan mudah diucapkan, sesuai durasi 10 detik. Jangan mengarang pengalaman pribadi, hasil, manfaat, harga, atau klaim yang tidak diberikan.
+
+NASKAH BICARA DAN TEKS LAYAR:
+${(style==='handreview' || style==='asmr')
+? 'Tidak ada naskah bicara, dialog, atau voice-over. Abaikan kolom naskah bicara jika terisi. Sampaikan review hanya melalui tulisan overlay per panel yang sudah ditentukan.'
+: speechScript
+? `Gunakan naskah bicara berikut sebagai dasar voice-over/dialog, ucapkan natural dan sesuaikan dengan durasi 10 detik: "${speechScript}". Jangan menambahkan klaim baru.`
+: 'Jika memakai voice-over/dialog, buat ucapan Bahasa Indonesia yang santai, natural, dan tidak kaku. Jangan mulai dengan salam generik atau kalimat template. Gunakan alur: hook terpilih (“${hookInstruction}”) → kebutuhan/masalah yang relevan → solusi/kegunaan berdasarkan fakta → CTA (“${cta}”). Utamakan solusi praktis dan detail nyata produk; jangan mengarang klaim atau pengalaman pribadi. Jika informasi terlalu sedikit, fokus pada detail yang terlihat dan jangan menebak. Jika voice-over dimatikan, jangan memaksakan adegan berbicara.'}
+${(style==='handreview' || style==='asmr')
+? 'Jangan tampilkan subtitle ucapan atau karaoke karena tidak ada suara manusia. Pertahankan tulisan review utama yang sama persis dengan storyboard.'
+: captionMode==='subtitle'
+? 'Buat subtitle Bahasa Indonesia yang sesuai dengan ucapan sebenarnya, sinkron per frasa, maksimal 1–2 baris, ukuran mudah dibaca, kontras tinggi.'
+: captionMode==='karaoke'
+? 'Buat caption karaoke yang sinkron dengan suara dan sorot kata yang sedang diucapkan satu per satu; ejaan harus akurat.'
+: 'Jangan tampilkan subtitle ucapan.'}
+${(style==='handreview' || style==='asmr') ? 'Jangan menambahkan pop-up lain di luar 10 tulisan overlay utama yang sudah ditetapkan; tulisan harus sama persis dengan storyboard.' : popStyle==='none' ? 'Jangan tampilkan teks promosi pop-up.' : `Tambahkan tulisan promosi pendek bergaya ${popStyle}, warna ${textColor}, di ${textPosition}. Gunakan animasi masuk pop/bounce lembut, tampil sebentar, lalu menghilang. Jangan menutupi produk, wajah, subtitle, atau tombol antarmuka.`}
+${style==='handreview' ? 'MODE TANGAN SAJA REVIEW TANPA UNBOXING — WAJIB: hanya tangan yang terlihat, produk sudah siap di meja sejak awal. Jangan membuka paket atau menampilkan kemasan luar sebagai aktivitas. Gerakan tangan harus memperagakan produk sesuai fungsi, dan setiap teks review muncul tepat saat gerakan terkait terjadi. ASMR sinkron dengan sentuhan/aksi nyata, tanpa voice-over dan tanpa musik. Gunakan set estetik yang sesuai kategori produk, properti meja yang relevan dan berganti sesuai produk, serta papan nama sesuai pilihan pengguna.' : ''}
+${style==='faceless' ? 'MODE PRODUK TANPA MODEL — WAJIB: tidak ada manusia, wajah, tubuh, tangan, atau bayangan manusia. Tampilkan teks review produk yang singkat dan informatif berdasarkan fakta yang diberikan atau detail yang tampak. Audio boleh berupa musik ringan, ambience, atau ASMR opsional; voice-over mengikuti pilihan pengguna.' : ''}\n${style==='asmr' ? 'MODE ASMR REVIEW TANPA MODEL — WAJIB: tidak ada manusia, wajah, tubuh, tangan, jari, atau bayangan manusia; tidak ada dialog, narasi, voice-over, atau musik. Tampilkan tulisan review produk di layar dalam Bahasa Indonesia, singkat tetapi informatif, berdasarkan nama produk dan informasi yang diberikan pengguna. Jangan hanya menampilkan kata dekoratif seperti “Warna hits” atau teks bunyi. Jika informasi tersedia, bagi menjadi beberapa tulisan sesuai adegan: nama/jenis produk, detail yang terlihat, pilihan warna/varian bila disebutkan, cara penggunaan bila relevan, dan ajakan mengecek detail produk. Jangan mengarang klaim atau informasi yang tidak tersedia. Sinkronkan setiap tulisan review dengan adegan terkait dan tampilkan cukup lama agar terbaca. Jangan membuat aksi yang memerlukan tangan. Gunakan suara ASMR yang sesuai dengan gerakan produk atau ambience visual; jangan menambahkan bunyi klik/buka jika tidak ada aksi yang terlihat. Tambahkan teks bunyi ASMR seperti “KLIK…” atau “SRET…” hanya jika bunyi tersebut cocok dengan aksi yang benar-benar terjadi. Audio hanya suara ASMR natural produk/aksi, tanpa musik dan tanpa suara manusia.' : ''}
+${(style==='handreview' || style==='asmr') ? 'Abaikan kata pop-up tambahan; gunakan hanya 10 tulisan utama yang sudah sama dengan storyboard.' : popWords ? `Gunakan kata pop-up yang dipilih pengguna ini, satu per satu pada momen yang cocok: ${popWords}.` : 'Pilih frasa pop-up pendek yang relevan berdasarkan fakta yang diberikan, misalnya “Detailnya cantik ✨”, “Praktis banget 💗”, atau “Cek produknya!”. Jangan mengarang klaim.'}
+Pastikan tulisan overlay utama per panel tetap tampil sesuai daftar storyboard; subtitle ucapan (jika ada) dan pop-up tambahan tidak boleh bertumpuk atau menutupi overlay utama. Jangan membuat teks acak atau logo/watermark baru. Bila generator video tidak mampu menghasilkan teks akurat, hasilkan video bersih dan tambahkan teks pada editor video setelahnya.\n\nARAHAN KHUSUS:\n${demoGuide}\n${action}\nAkhiri dengan CTA berikut jika sesuai konteks: “${cta}”. Jangan membuat klaim berlebihan atau menjanjikan hasil.`;
+return {name,storyboard,video};
+}
+document.getElementById('generate').addEventListener('click',()=>{
+  try {
+    const p=getPrompts();
+    document.getElementById('storyOutput').value=p.storyboard;
+    document.getElementById('videoOutput').value=p.video;
+    document.getElementById('storyOutput').scrollIntoView({behavior:'smooth',block:'start'});
+  } catch(error) {
+    console.error(error);
+    alert('Prompt belum berhasil dibuat. Muat ulang halaman lalu coba lagi.');
+  }
+});
+document.getElementById('copyStory').addEventListener('click',async()=>{const t=document.getElementById('storyOutput');if(!t.value){alert('Buat prompt terlebih dahulu.');return;}try{await navigator.clipboard.writeText(t.value);alert('Prompt storyboard berhasil disalin.');}catch(e){t.select();document.execCommand('copy');}});
+document.getElementById('copyVideo').addEventListener('click',async()=>{const t=document.getElementById('videoOutput');if(!t.value){alert('Buat prompt terlebih dahulu.');return;}try{await navigator.clipboard.writeText(t.value);alert('Prompt video UGC berhasil disalin.');}catch(e){t.select();document.execCommand('copy');}});
+document.getElementById('downloadStory').addEventListener('click',()=>{const t=document.getElementById('storyOutput').value;if(!t){alert('Buat prompt terlebih dahulu.');return;}downloadText('prompt-storyboard.txt',t);});
+document.getElementById('downloadVideo').addEventListener('click',()=>{const t=document.getElementById('videoOutput').value;if(!t){alert('Buat prompt terlebih dahulu.');return;}downloadText('prompt-video-ugc.txt',t);});
+document.getElementById('downloadAll').addEventListener('click',()=>{const a=document.getElementById('storyOutput').value,b=document.getElementById('videoOutput').value;if(!a||!b){alert('Buat prompt terlebih dahulu.');return;}downloadText('prompt-storyboard-dan-video-ugc.txt',a+'\\n\\n'+'='.repeat(50)+'\\n\\n'+b);});
+document.getElementById('reset').addEventListener('click',()=>{
+  ['itemName','brandName','benefits','signName','storyOutput','videoOutput','foodPhoto','storePhoto'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.value='';
+  });
+  document.getElementById('voice').selectedIndex=0;
+  document.getElementById('platform').selectedIndex=0;
+  document.getElementById('captionMode').selectedIndex=0;
+  document.getElementById('popStyle').selectedIndex=0;
+  document.getElementById('textColor').selectedIndex=0;
+  document.getElementById('textPosition').selectedIndex=0;
+  document.getElementById('outlineMode').value='tidak';
+  document.getElementById('reviewPlace').selectedIndex=0;
+  document.getElementById('signPosition').selectedIndex=0;
+  document.getElementById('doodleMode').value='tidak';
+  document.getElementById('speechScript').value='';
+  document.getElementById('audienceProblem').value='';
+  document.getElementById('productSolution').value='';
+  document.getElementById('hookResults').innerHTML='';
+  document.getElementById('hookStatus').textContent='Belum ada hook yang dipilih.';
+  document.getElementById('hookType').selectedIndex=0;
+  document.getElementById('ctaChoice').selectedIndex=0;
+  selectedHook='';
+  document.getElementById('popWords').value='';
+  content='produk'; style='review'; foodStyle='closeup';
+  document.querySelectorAll('#contentChoices .choice').forEach(b=>b.classList.toggle('active',b.dataset.content==='produk'));
+  document.querySelectorAll('#quickStyleChoices .choice').forEach(b=>b.classList.toggle('active',b.dataset.quickStyle==='review'));
+  document.getElementById('styleVariant').value='review';
+  document.getElementById('reviewConcept').value='review';
+  document.getElementById('reviewConceptHint').textContent=conceptHints.review;
+  document.querySelectorAll('#foodChoices .choice').forEach(b=>b.classList.toggle('active',b.dataset.food==='closeup'));
+  document.getElementById('foodUploads').classList.add('hidden');
+  document.getElementById('styleCard').classList.remove('hidden');
+  document.getElementById('foodStyleCard').classList.add('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+document.getElementById('voice').selectedIndex=0;
+document.getElementById('platform').selectedIndex=0;
+</script>
+</body>
+</html>
